@@ -27,6 +27,7 @@ const connectDB = async () => {
 
 
     } catch (error) {
+        cached.promise = null;
         console.log('DB Connection Error : ', error);
     }
 }
