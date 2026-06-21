@@ -41,11 +41,11 @@ export async function POST(req: NextRequest) {
         }, { status: 201 });
 
     } catch (error) {
+        console.log(`Internal Server Error During Register User: ${error}`); 
         return NextResponse.json({
             success: false,
             message: `Internal Server Error During Register User: ${error}`
         }, { status: 500 });
-        console.log(`Internal Server Error During Register User: ${error}`); 
     }
 
 }
