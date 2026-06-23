@@ -1,11 +1,11 @@
 import Credentials from "next-auth/providers/credentials";
-import type { JWT } from "next-auth/jwt";
-import type { Session } from "next-auth";
+import NextAuth from "next-auth";
 import connectDB from "./lib/connedtDB";
 import User from "./model/user.model";
 import bcrypt from "bcryptjs";
+import Google from "next-auth/providers/google";
 
-export const authOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
         Credentials({
             credentials: {
@@ -34,9 +34,31 @@ export const authOptions = {
                 }
             },
         }),
+        Google({
+            clientId:process.env.AUTH_GOOGLE_ID!,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET!
+        })
     ],
     callbacks: {
-        jwt({ token, user }: { token: JWT; user: any }) {
+
+        async signIn({ user, account }) {
+            if(account?.provider == "google"){
+                await connectDB();
+                let dbUser = await User.findOne({email:user.email});
+                if(!dbUser){
+                    dbUser = await User.create({
+                        name: user.name,
+                        email: user.email,
+                        image: user.image
+                    });
+                }
+                user.id = dbUser._id.toString();
+                user.role = dbUser.role.toString();
+            }
+            return true;
+        },
+
+        async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
@@ -45,7 +67,7 @@ export const authOptions = {
             }
             return token;
         },
-        session({ session, token }: { session: Session; token: JWT }) {
+        async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as string;
                 session.user.email = token.email as string;
@@ -61,7 +83,7 @@ export const authOptions = {
     },
     session: {
         strategy: "jwt" as const,
-        maxAge: 10 * 24 * 60 * 60 * 1000
+        maxAge: 10 * 24 * 60 * 60,
     },
     secret: process.env.AUTH_SECRET
-};
+});

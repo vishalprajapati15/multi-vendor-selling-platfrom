@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import { signIn } from "next-auth/react";
 
 const Register = () => {
 
@@ -136,6 +137,7 @@ const Register = () => {
                                 <div className="flex-1 h-px bg-gray-600"></div>
                             </div>
                             <motion.button
+                                onClick={()=>signIn("google", {callbackUrl:"/"})}
                                 className="flex items-center justify-center gap-3 py-3 bg-white/10 hover:bg-white/20 border border-white/30 rounded-xl transition cursor-pointer"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.90 }}

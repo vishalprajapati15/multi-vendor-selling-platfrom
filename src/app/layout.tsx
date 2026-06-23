@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Provider from "@/Provider";
 
 export const metadata: Metadata = {
   title: "Multi Cart",
@@ -15,7 +16,11 @@ export default function RootLayout({
     <html
       lang="en"
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Provider>
+          {children}
+        </Provider>
+      </body>
     </html>
   );
 }

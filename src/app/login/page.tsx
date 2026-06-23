@@ -8,7 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { AnimatePresence } from "motion/react"
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 
 const SignIn = () => {
@@ -19,19 +19,22 @@ const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
-    const handleSignIn = async (e:React.FormEvent) => {
+    const session = useSession();
+    console.log("Session : ", session.data?.user);
+
+    const handleSignIn = async (e: React.FormEvent) => {
         setLoading(true);
         e.preventDefault();
         try {
-                const result = await signIn("credentials", { redirect: false, email, password });
-                setLoading(false);
-                if (result && (result as any).ok) {
-                    alert("User Signed in successfully!!");
-                    router.push("/");
-                } else {
-                    const error = (result as any)?.error || 'Login failed';
-                    alert(`User Login error: ${error}`);
-                }
+            const result = await signIn("credentials", { redirect: false, email, password });
+            setLoading(false);
+            if (result && (result as any).ok) {
+                alert("User Signed in successfully!!");
+                router.push("/");
+            } else {
+                const error = (result as any)?.error || 'Login failed';
+                alert(`User Login error: ${error}`);
+            }
             setLoading(false);
         } catch (error) {
             console.log("User login error from frontend: ", error);
@@ -89,6 +92,7 @@ const SignIn = () => {
                             <div className="flex-1 h-px bg-gray-600"></div>
                         </div>
                         <motion.button
+                            onClick={() => signIn("google", { callbackUrl: "/" })}
                             className="flex items-center justify-center gap-3 py-3 bg-white/10 hover:bg-white/20 border border-white/30 rounded-xl transition cursor-pointer"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.90 }}
