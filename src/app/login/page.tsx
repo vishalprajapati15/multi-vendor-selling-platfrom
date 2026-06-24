@@ -73,6 +73,7 @@ const SignIn = () => {
                             onChange={(e) => setPassword(e.target.value)} value={password}
                         />
                         <button
+                            type='button'
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-12 top-45 -translate-y-1/2 text-gray-400 hover:text-white transition cursor-pointer">
                             {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
