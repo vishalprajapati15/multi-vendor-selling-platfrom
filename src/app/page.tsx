@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
+import AdminDashBoard from "@/components/Admin/AdminDashBoard";
 import EditRoleAndPhone from "@/components/EditRoleAndPhone";
 import NavBar from "@/components/NavBar";
+import UserDashboard from "@/components/User/UserDashboard";
+import VendorDashboard from "@/components/Vendor/VendorDashboard";
 import connectDB from "@/lib/connedtDB"
 import User from "@/model/user.model";
 import { redirect } from "next/navigation";
@@ -10,15 +13,15 @@ export default async function HOME() {
   await connectDB();
   const session = await auth();
   const user = await User.findById(session?.user?.id)
-  if(!user){
+  if (!user) {
     redirect("/login ");
   }
 
-  const inComplete = !user.role || !user.phone || (!user.phone && user.role ==="user");
+  const inComplete = !user.role || !user.phone || (!user.phone && user.role === "user");
 
-  if(inComplete){
+  if (inComplete) {
     return (
-      <EditRoleAndPhone/>
+      <EditRoleAndPhone />
     )
   }
 
@@ -26,7 +29,12 @@ export default async function HOME() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 font-sans flex-col">
-      <NavBar user={plainUser}/>
+      <NavBar user={plainUser} />
+      {
+        user?.role === "user" ? <UserDashboard /> :
+          user?.role === "vendor" ? <VendorDashboard /> :
+            <AdminDashBoard />
+      }
     </div>
   )
 }
