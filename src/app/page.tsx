@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import AdminDashBoard from "@/components/Admin/AdminDashBoard";
 import EditRoleAndPhone from "@/components/EditRoleAndPhone";
+import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import UserDashboard from "@/components/User/UserDashboard";
 import VendorDashboard from "@/components/Vendor/VendorDashboard";
@@ -30,11 +31,14 @@ export default async function HOME() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 font-sans flex-col">
       <NavBar user={plainUser} />
+
       {
         user?.role === "user" ? <UserDashboard /> :
           user?.role === "vendor" ? <VendorDashboard /> :
             <AdminDashBoard />
       }
+
+      <Footer user={plainUser}/>
     </div>
   )
 }
