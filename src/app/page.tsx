@@ -4,7 +4,8 @@ import EditRoleAndPhone from "@/components/EditRoleAndPhone";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import UserDashboard from "@/components/User/UserDashboard";
-import VendorDashboard from "@/components/Vendor/VendorDashboard";
+import EditVendorDetails from "@/components/Vendor/EditVendorDetails";
+import VendorRequest from "@/components/Vendor/VendorRequest";
 import connectDB from "@/lib/connedtDB"
 import User from "@/model/user.model";
 import { redirect } from "next/navigation";
@@ -26,7 +27,16 @@ export default async function HOME() {
     )
   }
 
-  const plainUser = JSON.parse(JSON.stringify(user))
+  const plainUser = JSON.parse(JSON.stringify(user));
+
+  if (user?.role === "vendor") {
+    const inCompleteDetails = !user.shopName || !user.shopAddress || !user.gstNumber;
+    if (inCompleteDetails) {
+      return (
+        <EditVendorDetails />
+      )
+    }
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 font-sans flex-col">
@@ -34,11 +44,12 @@ export default async function HOME() {
 
       {
         user?.role === "user" ? <UserDashboard /> :
-          user?.role === "vendor" ? <VendorDashboard /> :
-            <AdminDashBoard />
+          user?.role === "vendor"
+            ? <VendorRequest user={plainUser} />
+            : <AdminDashBoard />
       }
 
-      <Footer user={plainUser}/>
+      <Footer user={plainUser} />
     </div>
   )
 }

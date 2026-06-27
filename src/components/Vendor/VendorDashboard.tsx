@@ -29,7 +29,7 @@ const VendorDashBoard = () => {
   }
 
   return (
-    <div className='w-full flex min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white'>
+    <div className='w-full flex min-h-screen bg-linear-to-br from-gray-900 via-black to-gray-900 text-white'>
 
       {/* Mobile Tab bar */}
       <div className='lg:hidden fixed top-15 left-0 w-full bg-black px-6 py-3 flex justify-between items-center bg-black border-gray-700 z-50'>
