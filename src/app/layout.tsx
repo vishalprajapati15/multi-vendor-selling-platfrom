@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Provider from "@/Provider";
+import StoreProvider from "@/redux/StoreProvider";
+import InitUser from "@/InitUser";
 
 export const metadata: Metadata = {
   title: "Multi Cart",
@@ -18,7 +20,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Provider>
-          {children}
+          <StoreProvider>
+            <InitUser/> 
+            {children}
+          </StoreProvider>
         </Provider>
       </body>
     </html>
